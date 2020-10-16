@@ -3,19 +3,22 @@ const bcrypt = require('bcryptjs');
 const { generarJWT } = require('../helpers/jwt');
 
 
-exports.getUsuarios = (req,res) => {
-    
-     Usuario.find( (err,usuarios) =>{
-        if(err){
-            return res.status(400).json({
-                error: err
-            });
-        }
-        res.json({
-            usuarios,
-            uid: req.uid
-        });
+exports.getUsuarios = async (req,res) => {
+    const desde = Number(req.query.desde) || 0;
+
+
+    const [usuarios,total] = await Promise.all([
+        Usuario.find({}, 'nombre email role google img')
+                                  .skip( desde )
+                                  .limit( 5 ),
+        Usuario.countDocuments()
+     ]);
+
+    res.json({
+        usuarios,
+        total
     });
+    
 };
 
 exports.crearUsuarios = async (req,res) => {
