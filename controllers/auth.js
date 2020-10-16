@@ -1,6 +1,7 @@
 const Usuario = require('../models/usuario');
 const bcrypt = require('bcryptjs');
 const { generarJWT } = require('../helpers/jwt');
+const { googleVerify } = require('../helpers/google-verify');
 
 exports.login = async (req,res) => {
     const { email, password } = req.body;
@@ -33,4 +34,48 @@ exports.login = async (req,res) => {
             msg: 'Error... comuniquese con el administrador'
         });
     }
+};
+
+exports.googleSignin = async (req,res) => {
+    
+    const  googleToken = req.body.token;
+
+    try {
+        
+       const { name,email,picture  } = await googleVerify( googleToken );
+
+       const usuarioDB = await Usuario.findOne({email});
+       let usuario;
+
+       if( !usuarioDB ){
+        usuario = new Usuario({
+            nombre: name,
+            email,
+            password: '@@@',
+            img: picture,
+            google: true
+        });
+       }else{
+           usuario = usuarioDB;
+           usuario.google = true;
+       }
+
+       await Usuario.save();
+
+       const token = await generarJWT( usuario.id );
+
+
+       
+       res.json({
+        msg: 'Google Signin',
+        token
+    });
+       
+    } catch (error) {
+        res.status(401).json({
+            msg: 'Token no valido'
+        });    
+    }
+
+    
 };

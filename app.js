@@ -31,7 +31,7 @@ mongoose
     })
     .then( ()=> console.log('DB Online Connected'));
 
-
+app.use( express.static('public') );
 
 app.use('/api',usuarioRoutes);
 app.use('/api',authRoutes);

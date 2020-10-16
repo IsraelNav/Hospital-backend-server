@@ -73,3 +73,13 @@ exports.validarMedico = (req, res, next) => {
     }
      next();
 };
+
+exports.validarGoogle = (req, res, next) => {
+    req.check("token", "El token de Google es obligatorio").notEmpty();
+    const errors = req.validationErrors();
+    if (errors) {
+        const firstError = errors.map(error => error.msg)[0];
+        return res.status(400).json({ error: firstError });
+    }
+     next();
+};
