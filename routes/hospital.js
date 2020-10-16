@@ -7,7 +7,7 @@ const { validarHospital } = require('../validator/index');
 
 router.get('/hospitales',validarJWT ,getHospitales);
 router.post('/hospitales',validarJWT ,validarHospital , crearHospital);
-router.put('/hospitales/:id' ,validarJWT,actualizarHospital);
+router.put('/hospitales/:id' ,validarJWT,validarHospital,actualizarHospital);
 router.delete('/hospitales/:id',validarJWT,borrarHospital);
 
 

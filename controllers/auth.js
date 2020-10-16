@@ -2,6 +2,7 @@ const Usuario = require('../models/usuario');
 const bcrypt = require('bcryptjs');
 const { generarJWT } = require('../helpers/jwt');
 const { googleVerify } = require('../helpers/google-verify');
+const usuario = require('../models/usuario');
 
 exports.login = async (req,res) => {
     const { email, password } = req.body;
@@ -78,4 +79,15 @@ exports.googleSignin = async (req,res) => {
     }
 
     
+};
+
+exports.renewToken = async (req,res) => {
+
+    const uid = req.uid;
+    
+    const token = await generarJWT( uid );
+
+    res.json({
+        token
+    });
 };

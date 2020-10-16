@@ -7,8 +7,8 @@ const { validarMedico } = require('../validator/index');
 
 router.get('/medicos', validarJWT,getMedicos);
 router.post('/medicos',validarJWT ,validarMedico,crearMedico);
-router.put('/medicos/:id' ,actualizarMedico);
-router.delete('/medicos/:id',borrarMedico);
+router.put('/medicos/:id' ,validarJWT,validarMedico,actualizarMedico);
+router.delete('/medicos/:id',validarJWT,borrarMedico);
 
 
 
